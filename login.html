@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Deepfake Catcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Lexend', sans-serif;
+        }
+
+        /* Full-screen background - Light Theme */
+        /* Full-screen background with reduced opacity */
+body {
+    background: none; /* Remove direct background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    color: #333;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("static/login.png") repeat center;
+    opacity: 0.8; /* Adjust this value to control transparency */
+    z-index: -1;
+}
+
+
+        /* Logo */
+        .logo-container img {
+            width: 200px;
+            opacity: 0;
+            transform: scale(0.3) translateY(-200px);
+            animation: fadeInLogo 1.5s ease-in-out forwards;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Login form */
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInForm 1.5s ease-in-out 1s forwards;
+        }
+
+        .login-container h2 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        /* Input Fields */
+        input[type="email"], input[type="password"] {
+            width: 85%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fff;
+            color: #333;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #999;
+        }
+
+        /* Submit Button */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background: #007bff;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        /* Error Message */
+        .alert {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Signup Link */
+        .signup-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Logo fade-in */
+        @keyframes fadeInLogo {
+            0% { opacity: 0; transform: scale(0.3) translateY(-200px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Form fade-in */
+        @keyframes fadeInForm {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Deepfake Catcher Logo">
+    </div>
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <!-- Signup Link -->
+        <p class="signup-link">Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+    </div>
+
+</body>
+</html>

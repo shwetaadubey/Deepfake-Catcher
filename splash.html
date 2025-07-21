@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Lexend', sans-serif;
+        }
+
+        /* Full-screen background with image */
+        body {
+            background: url('index.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Logo container */
+        .logo-container {
+            position: absolute;
+            opacity: 1;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Logo image */
+        .logo-container img {
+            width: 300px;
+            transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+        }
+
+        /* Logo morphing into login */
+        .logo-morph {
+            transform: scale(0.3) translateY(-200px);
+            opacity: 0;
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container" id="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Deepfake Catcher Logo">
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById("logo").classList.add("logo-morph");
+
+            setTimeout(() => {
+                window.location.href = "{{ url_for('login') }}";
+            }, 1500); // Wait for morph animation to finish before loading login page
+        }, 5000); // Delay before morphing (2 seconds)
+    </script>
+
+</body>
+</html>

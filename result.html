@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Result</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font: Lexend -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Lexend', sans-serif;
+        }
+
+        html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: none; /* Remove direct background */
+    color: #000000;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("static/result.png") repeat;
+    opacity: 0.5; /* Adjust this value to control transparency */
+    z-index: -1;
+}
+
+
+        /* Navbar Logo Styling */
+        .navbar-brand img {
+            height: 60px; /* Adjust logo size */
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .content {
+            flex: 1;
+            padding-top: 80px; /* Offset for fixed navbar */
+        }
+
+        .result-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        /* Left Side: Image */
+        .result-img {
+            width: 350px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            border: 3px solid #007bff;
+        }
+
+        /* Right Side: Result Symbol */
+        .result-symbol {
+            font-size: 100px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .real {
+            color: green;
+        }
+
+        .fake {
+            color: red;
+        }
+
+        .confidence {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Button */
+        .btn-primary {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+        }
+
+        /* Footer */
+        footer {
+            /* background-color: #4fa4ff; */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}" style="font-size: 2.5em;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"> 
+            DEEPFAKE CATCHER
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <!-- Logout Button (Triggers Modal) -->
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" style="font-size: 1.5em;">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Logout Confirmation Modal (Move this outside the navbar) -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to logout?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Result Section -->
+    <div class="container content">
+        <h1 class="text-center mb-4" style="color: rgb(0, 0, 0);">Prediction Result</h1>
+
+        <!-- Image + Result Symbol Side by Side -->
+        <div class="result-container">
+            <!-- Left: Uploaded Image -->
+            <div>
+                <img src="{{ url_for('static', filename='uploads/' + filename) }}" 
+                     alt="Uploaded Image" 
+                     class="result-img">
+            </div>
+
+            <!-- Right: Result Symbol -->
+            <div class="result-symbol">
+                {% if prediction < 0.5 %}
+                    <span class="real">&#10004;</span>  <!-- Big Green Tick -->
+                    <span class="confidence text-success">{{ confidence }}% Real</span>
+                {% else %}
+                    <span class="fake">&#10060;</span>  <!-- Big Red Cross -->
+                    <span class="confidence text-danger">{{ confidence }}% Fake</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Button to upload another image -->
+        <div class="text-center mt-5">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Upload Another Image</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Deepfake Catcher | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
